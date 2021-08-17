@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.17.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: influxdb
+  name: influxdb
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: influxdb
+    spec:
+      containers:
+      - image: docker.io/influxdb:1.8
+        name: influxdb
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/influxdb
+          name: influxdb-claim0
+        - mountPath: /var/lib/influxdb
+          name: influxdb-claim1
+      restartPolicy: Always
+      volumes:
+      - name: influxdb-claim0
+        persistentVolumeClaim:
+          claimName: influxdb-claim0
+      - name: influxdb-claim1
+        persistentVolumeClaim:
+          claimName: influxdb-claim1
+status: {}
